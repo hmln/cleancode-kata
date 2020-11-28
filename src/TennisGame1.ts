@@ -1,11 +1,13 @@
 import { TennisGame } from './TennisGame';
+import { throws } from 'assert';
 
 
 export class TennisGame1 implements TennisGame {
-  private m_score1: number = 0;
-  private m_score2: number = 0;
+  private player1Score: number = 0;
+  private player2Score: number = 0;
   private player1Name: string;
   private player2Name: string;
+  private scoreSlogan: string = '';
 
   constructor(player1Name: string, player2Name: string) {
     this.player1Name = player1Name;
@@ -14,58 +16,66 @@ export class TennisGame1 implements TennisGame {
 
   wonPoint(playerName: string): void {
     if (playerName === 'player1')
-      this.m_score1 += 1;
+      this.player1Score += 1;
     else
-      this.m_score2 += 1;
+      this.player2Score += 1;
   }
 
-  getScore(): string {
-    let score: string = '';
+  getSlogenOfEqualScore(): void {
+    if (this.player1Score === 0) {
+      this.scoreSlogan = 'Love-All';
+    }
+    if (this.player1Score === 1) {
+      this.scoreSlogan = 'Fifteen-All';
+    }
+    if (this.player1Score === 2) {
+      this.scoreSlogan = 'Thirty-All';
+    }
+    if (this.player1Score > 2) {
+      this.scoreSlogan = 'Deuce'
+    }
+  }
+  getSloganScoreGreaterThanEqual4(): void {
+    const dítanceScore: number = this.player1Score - this.player2Score;
+    if (dítanceScore === 1) this.scoreSlogan = 'Advantage player1';
+    else if (dítanceScore === -1) this.scoreSlogan = 'Advantage player2';
+    else if (dítanceScore >= 2) this.scoreSlogan = 'Win for player1';
+    else this.scoreSlogan = 'Win for player2';
+  }
+  
+  getSlogan(): void {
     let tempScore: number = 0;
-    if (this.m_score1 === this.m_score2) {
-      switch (this.m_score1) {
-        case 0:
-          score = 'Love-All';
-          break;
-        case 1:
-          score = 'Fifteen-All';
-          break;
-        case 2:
-          score = 'Thirty-All';
-          break;
-        default:
-          score = 'Deuce';
-          break;
+    const NUMBER_OF_PLAYERS: number = 3;
+    for (let player = 1; player < NUMBER_OF_PLAYERS; player++) {
+      if (player === 1) tempScore = this.player1Score;
+      else { this.scoreSlogan += '-'; tempScore = this.player2Score; }
 
+      if (tempScore === 0) {
+        this.scoreSlogan += 'Love';
+      }
+      if (tempScore === 1) {
+        this.scoreSlogan += 'Fifteen';
+      }
+      if (tempScore === 2) {
+        this.scoreSlogan += 'Thirty';
+      }
+      if (tempScore > 2) {
+        this.scoreSlogan += 'Forty';
       }
     }
-    else if (this.m_score1 >= 4 || this.m_score2 >= 4) {
-      const minusResult: number = this.m_score1 - this.m_score2;
-      if (minusResult === 1) score = 'Advantage player1';
-      else if (minusResult === -1) score = 'Advantage player2';
-      else if (minusResult >= 2) score = 'Win for player1';
-      else score = 'Win for player2';
+  }
+  getScore(): string {
+    const maxScore = Math.max(this.player1Score, this.player2Score);
+    const THRESHOLD: number = 4;
+    if (this.player1Score === this.player2Score) {
+      this.getSlogenOfEqualScore()
+    }
+    else if (maxScore >= THRESHOLD) {
+      this.getSloganScoreGreaterThanEqual4()
     }
     else {
-      for (let i = 1; i < 3; i++) {
-        if (i === 1) tempScore = this.m_score1;
-        else { score += '-'; tempScore = this.m_score2; }
-        switch (tempScore) {
-          case 0:
-            score += 'Love';
-            break;
-          case 1:
-            score += 'Fifteen';
-            break;
-          case 2:
-            score += 'Thirty';
-            break;
-          case 3:
-            score += 'Forty';
-            break;
-        }
-      }
+      this.getSlogan()
     }
-    return score;
+    return this.scoreSlogan;
   }
 }

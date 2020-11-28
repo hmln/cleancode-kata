@@ -36,10 +36,10 @@ export class TennisGame1 implements TennisGame {
     }
   }
   getSloganScoreGreaterThanEqual4(): void {
-    const dítanceScore: number = this.player1Score - this.player2Score;
-    if (dítanceScore === 1) this.scoreSlogan = 'Advantage player1';
-    else if (dítanceScore === -1) this.scoreSlogan = 'Advantage player2';
-    else if (dítanceScore >= 2) this.scoreSlogan = 'Win for player1';
+    const distanceScore: number = this.player1Score - this.player2Score;
+    if (distanceScore === 1) this.scoreSlogan = 'Advantage player1';
+    else if (distanceScore === -1) this.scoreSlogan = 'Advantage player2';
+    else if (distanceScore >= 2) this.scoreSlogan = 'Win for player1';
     else this.scoreSlogan = 'Win for player2';
   }
   

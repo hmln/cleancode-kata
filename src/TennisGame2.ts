@@ -57,7 +57,6 @@ export class TennisGame2 implements TennisGame {
   getScore(): string {
     const distanceScore: number = this.P1point - this.P2point;
     const maxScore: number = Math.max(this.P1point, this.P2point)
-    const minScore: number = Math.min(this.P1point, this.P2point)
     // When both players' scores are equal
     if (this.P1point === this.P2point) {
       this.whenBothLessThanThreshold()

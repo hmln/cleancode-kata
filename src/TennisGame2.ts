@@ -7,12 +7,13 @@ export class TennisGame2 implements TennisGame {
 
   P1res: string = '';
   P2res: string = '';
-
+  
   private player1Name: string;
   private player2Name: string;
 
   private scoreSlogan: string = '';
-
+  private THRESHOLD: number = 4;
+  
   constructor(player1Name: string, player2Name: string) {
     this.player1Name = player1Name;
     this.player2Name = player2Name;
@@ -96,40 +97,42 @@ export class TennisGame2 implements TennisGame {
     }
   }
   whenEitherPlayerLargerThanTheOther(): void {
-    if (this.P1point < 4) {
+    if (this.P1point < this.THRESHOLD) {
       this.whenP1LargerThanP2()
     }
-    if (this.P2point < 4) {
+    if (this.P2point < this.THRESHOLD) {
       this.whenP2LargerThanP1()
     }
   }
-  whenEitherPlayerWon(): void {
-    if ((this.P1point - this.P2point) >= 2) {
+  whenEitherPlayerWon(distanceScore): void {
+    if (distanceScore >= 2) {
       this.scoreSlogan = 'Win for player1';
     }
-    if ((this.P2point - this.P1point) >= 2) {
+    if (distanceScore <= -2) {
       this.scoreSlogan = 'Win for player2';
     }
   }
   getScore(): string {
-    const distanceScore: number = this.P1point - this.P2point;
+    const distanceScoreBetweenP1andP2: number = this.P1point - this.P2point;
+    const maxScoreBetween2Players: number = Math.max(this.P1point, this.P2point)
+    const minScoreBetween2Players: number = Math.min(this.P1point, this.P2point)
     if (this.P1point === this.P2point) {
       this.whenBothLessThanThreshold()
     }
-    if (this.P1point === 0 || this.P2point === 0){
+    if (minScoreBetween2Players === 0){
       this.whenEitherPlayerEqualZero()
     }
-    if (Math.abs(distanceScore) > 0){
+    if (Math.abs(distanceScoreBetweenP1andP2) > 0){
       this.whenEitherPlayerLargerThanTheOther()
     }
-    if (distanceScore > 0){
+    if (distanceScoreBetweenP1andP2 > 0){
       this.whenPlayer1NearlyWin();
     }
-    if (distanceScore < 0) {
+    if (distanceScoreBetweenP1andP2 < 0) {
       this.whenPlayer2NearlyWin();
     }
-    if (this.P1point >= 4 || this.P2point >= 4) {
-      this.whenEitherPlayerWon()
+    if (maxScoreBetween2Players >= this.THRESHOLD) {
+      this.whenEitherPlayerWon(distanceScoreBetweenP1andP2)
     }
     return this.scoreSlogan;
   }

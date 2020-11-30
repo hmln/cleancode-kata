@@ -27,7 +27,7 @@ export class TennisGame3 implements TennisGame {
     
     const p: string[] = ['Love', 'Fifteen', 'Thirty', 'Forty'];
     const scoreSlogan1 = p[this.p1], scoreSlogan2 = p[this.p2];
-    return (scoreSlogan1 === scoreSlogan2) ? scoreSlogan2 + '-All' : scoreSlogan2 + '-' + scoreSlogan2;
+    return (scoreSlogan1 === scoreSlogan2) ? scoreSlogan1 + '-All' : scoreSlogan1 + '-' + scoreSlogan2;
   }
 
   wonPoint(playerName: string): void {

@@ -34,48 +34,20 @@ export class TennisGame2 implements TennisGame {
   }
 
   whenP2EqualZero(): void {
-    if (this.P1point === 1)
-      this.P1res = 'Fifteen';
-    if (this.P1point === 2)
-      this.P1res = 'Thirty';
-    if (this.P1point === 3)
-      this.P1res = 'Forty';
+    this.P1res = pointToName(this.P1point)
     this.P2res = 'Love';
     this.scoreSlogan = this.P1res + '-' + this.P2res;
   }
 
   whenP1EqualZero(): void {
-    if (this.P2point === 1)
-      this.P2res = 'Fifteen';
-    if (this.P2point === 2)
-      this.P2res = 'Thirty';
-    if (this.P2point === 3)
-      this.P2res = 'Forty';
-
+    this.P2res = pointToName(this.P2point)
     this.P1res = 'Love';
     this.scoreSlogan = this.P1res + '-' + this.P2res;
   }
 
-  whenP1LargerThanP2(): void {
-    if (this.P1point === 2)
-      this.P1res = 'Thirty';
-    if (this.P1point === 3)
-      this.P1res = 'Forty';
-    if (this.P2point === 1)
-      this.P2res = 'Fifteen';
-    if (this.P2point === 2)
-      this.P2res = 'Thirty';
-    this.scoreSlogan = this.P1res + '-' + this.P2res;
-  }
-  whenP2LargerThanP1(): void {
-    if (this.P2point === 2)
-      this.P2res = 'Thirty';
-    if (this.P2point === 3)
-      this.P2res = 'Forty';
-    if (this.P1point === 1)
-      this.P1res = 'Fifteen';
-    if (this.P1point === 2)
-      this.P1res = 'Thirty';
+  onePlayerLargerThanTheOther(): void {
+    this.P1res = pointToName(this.P1point)
+    this.P2res = pointToName(this.P2point)
     this.scoreSlogan = this.P1res + '-' + this.P2res;
   }
   whenPlayer1NearlyWin(): void {
@@ -96,14 +68,7 @@ export class TennisGame2 implements TennisGame {
       this.whenP1EqualZero()
     }
   }
-  whenEitherPlayerLargerThanTheOther(): void {
-    if (this.P1point < this.THRESHOLD) {
-      this.whenP1LargerThanP2()
-    }
-    if (this.P2point < this.THRESHOLD) {
-      this.whenP2LargerThanP1()
-    }
-  }
+  
   whenEitherPlayerWon(distanceScore): void {
     if (distanceScore >= 2) {
       this.scoreSlogan = 'Win for player1';
@@ -113,26 +78,32 @@ export class TennisGame2 implements TennisGame {
     }
   }
   getScore(): string {
-    const distanceScoreBetweenP1andP2: number = this.P1point - this.P2point;
-    const maxScoreBetween2Players: number = Math.max(this.P1point, this.P2point)
-    const minScoreBetween2Players: number = Math.min(this.P1point, this.P2point)
+    const distanceScore: number = this.P1point - this.P2point;
+    const maxScore: number = Math.max(this.P1point, this.P2point)
+    const minScore: number = Math.min(this.P1point, this.P2point)
     if (this.P1point === this.P2point) {
       this.whenBothLessThanThreshold()
     }
-    if (minScoreBetween2Players === 0){
+    if (minScore === 0){
       this.whenEitherPlayerEqualZero()
     }
-    if (Math.abs(distanceScoreBetweenP1andP2) > 0){
-      this.whenEitherPlayerLargerThanTheOther()
-    }
-    if (distanceScoreBetweenP1andP2 > 0){
+    
+    if (distanceScore > 0){
+      if (this.P1point < this.THRESHOLD) {
+        this.onePlayerLargerThanTheOther();
+      }
       this.whenPlayer1NearlyWin();
     }
-    if (distanceScoreBetweenP1andP2 < 0) {
+    
+    if (distanceScore < 0) {
+      if (this.P2point < this.THRESHOLD) {
+        this.onePlayerLargerThanTheOther();
+      }
       this.whenPlayer2NearlyWin();
     }
-    if (maxScoreBetween2Players >= this.THRESHOLD) {
-      this.whenEitherPlayerWon(distanceScoreBetweenP1andP2)
+    
+    if (maxScore >= this.THRESHOLD) {
+      this.whenEitherPlayerWon(distanceScore)
     }
     return this.scoreSlogan;
   }
@@ -163,4 +134,8 @@ export class TennisGame2 implements TennisGame {
     else
       this.P2Score();
   }
+}
+
+function pointToName(point) {
+  return ['Love', 'Fifteen', 'Thirty', 'Forty'][point]
 }
